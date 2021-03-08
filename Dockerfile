@@ -6,6 +6,6 @@ COPY src .
 #instalacion php (equivalente yum install php)
 RUN apk add php
 #queremos ejecutar "php index.php"
-ENTRYPOINT /usr/bin/php
+ENTRYPOINT ["/usr/bin/php"]
 #opciones o argumentos
-CMD -f index.php -S 0.0.0.0:8080
+CMD ["-f","index.php","-S","0.0.0.0:8080"]                         +
