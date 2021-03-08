@@ -1,20 +1,20 @@
 name: CI
-on:
+on: 
   push:
-    branches:
+    branches: 
     - docker
-jobs:
+jobs: 
   docker:
     runs-on: ubuntu-18.04
     steps:
     - name: checkout
-      uses: action/checkout@v2
-    - neme: test
+      uses: actions/checkout@v2
+    - name: test
       run: |
         docker build -t test .
         docker run -d --name testcontainer test
-        while true
+        while true 
           do \
             sleep 10
-            docker exec testcontainer ps | grep 'php -f inde.php' && break
+            docker exec testcontainer ps | grep 'php -f index.php' && break
           done
