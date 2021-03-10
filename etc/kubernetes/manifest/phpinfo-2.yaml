@@ -1,0 +1,89 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phpinfo-2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: phpinfo-2
+  template:
+    metadata:
+      labels:
+        app: phpinfo-2
+    spec:
+      containers:
+      - name: phpinfo-2
+        image: ljferrero/phpinfo-2:latest
+        imagePullPolicy: Allways
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          failureTheshold: 3
+          periodSeconds: 10
+          succesThreshold: 1
+          timeoutSeconds: 1
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          failureTheshold: 3
+          periodSeconds: 10
+          succesThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100m
+          request:
+            cpu: 100m
+            memory: 100m
+---
+#politica de cortafuejos, se cierra todo
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+spec:
+  #seleccion de todo los pods se deja vacio y no se puede acceder "ingreso" a los pods
+  podSelector:
+  policeTypes: 
+  - Ingress
+---
+#regla de apertura para el contenedor phpinfo-2 por el puerto 8080
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: phpinfo-2
+spec:
+  ingress:
+  - ports:
+    - port: 8080  
+  podSelector:
+    matchLabels:
+      app: phpinfo-2
+  policeTypes: 
+  - Ingress
+---
+#nunca se habla con el pod, usamos un balenceador de carga hacia los pods y esto es el servicio
+apiVersion: v1
+kind: Service
+metadata:
+  name: phpinfo-2
+spec:
+  ports:
+  #1 puerto del balenceador y el segundo es el del pod
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: phpinfo-2
+  # IP internal del cluster   
+  type: ClusterIP
+---  
+
+
+        
+  
