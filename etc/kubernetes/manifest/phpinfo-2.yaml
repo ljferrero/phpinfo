@@ -16,7 +16,7 @@ spec:
       containers:
       - name: phpinfo-2
         image: ljferrero/phpinfo-2:latest
-        imagePullPolicy: Allways
+        imagePullPolicy: Always
         livenessProbe:
           tcpSocket:
             port: 8080
