@@ -22,8 +22,8 @@ jobs:
         while true
           do \
             sleep 10
-            docker logs testcontainer 2>& 1 | grep 'PHP .* Development Server .* started' && break
-          done
+            docker logs testcontainer 2>& 1 | grep 'PHP .* Development Server .* started' && break 
+          done      
   swarm:
     runs-on: ubuntu-18.04
     steps:
@@ -32,31 +32,32 @@ jobs:
     - name: test
       run: |
         set -x
-        #crea imaten
+        #creo imagen image
         docker build -t ljferrero/phpinfo-2:testing .
         docker swarm init
         project=phpinfo-2
         compose=etc/swarm/manifests/${project}.yaml
-        #sustituyo latest por testing y despliego con compose
+        #sustituyo latest x testing y despliego con compose
         sed -i /image:/s/latest/testing/ ${compose}
         sed -i /node.role/s/worker/manager/ ${compose}
-        #despliegue en openshift
+        #Despliegue en Openshift
         #oc apply -f ${compose}
-        #despliegue en kubernetes
+        #despliegue en Kubernetes
         #kubectl apply -f ${compose}
-        #despliegue en swarm
+        #desplioegue en swarm
         docker stack deploy -c ${compose} ${project}
         while true 
           do \
             sleep 10
-            docker service ls | grep "${project}.*replicated.*\([0-9}\)/\1" && break
+            docker service ls | grep "${project}.*\([0-9]\)/\1" && break
           done
         while true
           do \
             sleep 10
-            docker service logs ${project}_${project} 2>& 1 | grep 'PHP .* Development Server .* started' && break
-          done
-
-
-
+            docker service logs ${project}_${project} 2>& 1 | grep 'PHP .* Development Server .* started' && break 
+          done      
+                        
+            
+            
+            
 
