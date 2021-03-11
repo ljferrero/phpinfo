@@ -3,87 +3,60 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: phpinfo-2
-spec:
+spec: 
   replicas: 2
-  selector:
+  selector: 
     matchLabels:
       app: phpinfo-2
-  template:
-    metadata:
-      labels:
+  template: 
+    metadata: 
+      labels: 
         app: phpinfo-2
     spec:
-      containers:
+      containers: 
       - name: phpinfo-2
         image: ljferrero/phpinfo-2:latest
         imagePullPolicy: Always
-        livenessProbe:
-          tcpSocket:
-            port: 8080
-          failureTheshold: 3
-          periodSeconds: 10
-          succesThreshold: 1
-          timeoutSeconds: 1
-        ports:
+        ports: 
         - containerPort: 8080
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8080
-          failureTheshold: 3
-          periodSeconds: 10
-          succesThreshold: 1
-          timeoutSeconds: 1
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100m
-          request:
-            cpu: 100m
-            memory: 100m
 ---
-#politica de cortafuejos, se cierra todo
+#politica red Cortafuegos
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: default-deny-all
-spec:
-  #seleccion de todo los pods se deja vacio y no se puede acceder "ingreso" a los pods
+spec: 
   podSelector: {}
-  policeTypes: 
+  policyTypes: 
   - Ingress
 ---
-#regla de apertura para el contenedor phpinfo-2 por el puerto 8080
+#Regla aperturista
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: phpinfo-2
-spec:
+spec: 
   ingress:
   - ports:
-    - port: 8080  
+    - port: 8080    
   podSelector: 
-    matchLabels:
+    matchLabels: 
       app: phpinfo-2
-  policeTypes: 
+  policyTypes: 
   - Ingress
----
-#nunca se habla con el pod, usamos un balenceador de carga hacia los pods y esto es el servicio
+---            
+# Servicio para balanceador de carga hacia los Pods
 apiVersion: v1
 kind: Service
 metadata:
   name: phpinfo-2
-spec:
-  ports:
-  #1 puerto del balenceador y el segundo es el del pod
+spec: 
+  ports: 
   - port: 8080
     targetPort: 8080
   selector:
     app: phpinfo-2
-  # IP internal del cluster   
+  # IP interna al cluster
   type: ClusterIP
----  
-
-
-        
-  
+---
+    
