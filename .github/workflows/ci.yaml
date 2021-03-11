@@ -39,7 +39,7 @@ jobs:
         compose=etc/swarm/manifests/${project}.yaml
         #sustituyo latest por testing y despliego con compose
         sed -i /image:/s/latest/testing/ ${compose}
-        sed -i /node.role/s/worker/manager ${compose}
+        sed -i /node.role/s/worker/manager/ ${compose}
         #despliegue en openshift
         #oc apply -f ${compose}
         #despliegue en kubernetes
