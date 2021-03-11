@@ -1,3 +1,4 @@
+#para evitar ir al docker engine
 **/*
 !src
 !Dockerfile
