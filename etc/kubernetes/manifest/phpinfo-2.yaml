@@ -49,7 +49,7 @@ metadata:
   name: default-deny-all
 spec:
   #seleccion de todo los pods se deja vacio y no se puede acceder "ingreso" a los pods
-  podSelector:
+  podSelector: {}
   policeTypes: 
   - Ingress
 ---
@@ -62,7 +62,7 @@ spec:
   ingress:
   - ports:
     - port: 8080  
-  podSelector:
+  podSelector: 
     matchLabels:
       app: phpinfo-2
   policeTypes: 
