@@ -33,7 +33,7 @@ jobs:
       run: |
         set -x
         #creo imagen image
-        docker build -t javi/phpinfo-2:testing .
+        docker build -t ljferrero/phpinfo-2:testing .
         docker swarm init
         project=phpinfo-2
         compose=etc/swarm/manifests/${project}.yaml
